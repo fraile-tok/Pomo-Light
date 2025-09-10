@@ -1,0 +1,15 @@
+.work-mode {
+    color: red;
+}
+
+.short-mode {
+    color: orange;
+}
+
+.long-mode {
+    color: green;
+}
+
+.off-mode {
+    color: gray;
+}

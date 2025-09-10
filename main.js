@@ -1,3 +1,10 @@
+// DOM Elements
+const appContainer = document.getElementById('app');
+const timeContainer = document.getElementById('time');
+const startButton = document.getElementById('start');
+const pauseButton = document.getElementById('pause');
+const stopButton = document.getElementById('stop');
+
 // Important Variables
 workTime = .1; // minutes
 shortTime = .1; // minutes
@@ -16,7 +23,7 @@ const state = {
 function renderTime() {
     const mins = Math.floor(state.remaining / 60);
     const secs = state.remaining % 60;
-    document.getElementById('time').innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    timeContainer.innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
 let intervalId = null;
@@ -36,6 +43,9 @@ function stop() {
     pause();
     state.remaining = state.lengths[state.mode];
     renderTime();
+
+    timeContainer.classList.remove('work-mode', 'short-mode', 'long-mode', 'off-mode'); // remove previous mode
+    timeContainer.classList.add(`${state.mode}-mode`); // add new mode
 }
 
 function tick() {
@@ -59,7 +69,11 @@ function handleModeEnd() {
     } else {
         state.mode = 'work';
     }
+
     state.remaining = state.lengths[state.mode];
+    timeContainer.classList.remove('work-mode', 'short-mode', 'long-mode', 'off-mode'); // remove previous mode
+    timeContainer.classList.add(`${state.mode}-mode`); // add new mode
+    
     renderTime();
     start();
 }
