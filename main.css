@@ -1,15 +1,74 @@
+:root {
+    --dark: #2c3e50;
+    --dark-2: #34495e;
+    --light: #ecf0f1;
+    --text-dark: var(--dark);
+    --text-light: var(--light);
+    --red: #c0392b;
+    --red2: #e74c3c;
+    --green: #16a085;
+    --green2: #1abc9c;
+    --blue: #2980b9;
+    --blue2: #3498db;
+}
+
+/* General */
+body {
+    background-color: var(--dark);
+    color: var(--text-light);
+    font-family: sans-serif;
+    font-size: 16px;
+    margin: 0;
+}
+
+#app {
+    margin: 5em auto;
+    max-width: 720px;
+    padding: 2rem;
+    background-color: var(--dark-2);
+    border-radius: 1rem;
+}
+
+#timer-container {
+    color: var(--text-light);
+    border-radius: 1rem;
+    padding: 1rem;
+    align-content: center;
+    text-align: center;
+}
+
+#time {
+    display: block;
+    margin: 0 auto;
+    max-width: 50%;
+    padding: 2rem;
+    margin-bottom: 1rem;
+    font-size: 5em;
+    border-radius: 1rem;
+}
+
+
+/* Timer States */
 .work-mode {
-    color: red;
+    background-color: var(--red) !important;
+}
+
+.work-mode #time {
+    background-color: var(--red2) !important;
 }
 
 .short-mode {
-    color: orange;
+    background-color: var(--green) !important;
+}
+
+.short-mode #time {
+    background-color: var(--green2) !important;
 }
 
 .long-mode {
-    color: green;
+    background-color: var(--blue) !important;
 }
 
-.off-mode {
-    color: gray;
+.long-mode #time {
+    background-color: var(--blue2) !important;
 }

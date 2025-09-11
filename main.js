@@ -1,6 +1,7 @@
 // DOM Elements
 const appContainer = document.getElementById('app');
-const timeContainer = document.getElementById('time');
+const timeContainer = document.getElementById('timer-container');
+const timer = document.getElementById('time');
 const startButton = document.getElementById('start');
 const pauseButton = document.getElementById('pause');
 const stopButton = document.getElementById('stop');
@@ -12,7 +13,7 @@ longTime = .1; // minutes
 
 // Timer State
 const state = {
-    mode: 'work', // cycles between work, short, long
+    mode: 'long', // cycles between work, short, long
     lengths: { work: workTime*60, short: shortTime*60, long: longTime*60}, // in seconds
     remaining: workTime*60, // in seconds
     running: false,
@@ -23,7 +24,7 @@ const state = {
 function renderTime() {
     const mins = Math.floor(state.remaining / 60);
     const secs = state.remaining % 60;
-    timeContainer.innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    timer.innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
 let intervalId = null;
@@ -43,9 +44,7 @@ function stop() {
     pause();
     state.remaining = state.lengths[state.mode];
     renderTime();
-
     timeContainer.classList.remove('work-mode', 'short-mode', 'long-mode', 'off-mode'); // remove previous mode
-    timeContainer.classList.add(`${state.mode}-mode`); // add new mode
 }
 
 function tick() {
