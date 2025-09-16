@@ -29,13 +29,15 @@ const state = {
     lengths: { work: workTime*60, short: shortTime*60, long: longTime*60}, // in seconds
     remaining: workTime*60, // in seconds
     running: false,
-    completedWorks: 0
+    completedWorks: 0,
+    intervalId: null,
+    targetEpochMs: null,
 }
 
 // Functions
 function renderTime() {
     const mins = Math.floor(state.remaining / 60);
-    const secs = state.remaining % 60;
+    const secs = Math.round(state.remaining % 60);
     timer.innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
@@ -49,17 +51,22 @@ function setMode(next) {
 
 let intervalId = null;
 function start() {
-    if (state.mode === 'off') setMode('work');
     if (state.running) return;
+    if (state.mode === 'off') setMode('work');
     state.running = true;
-    intervalId = setInterval(tick, 1000);
+
+    state.targetEpochMs = Date.now() + (state.remaining * 1000);
+
+    state.intervalId = setInterval(tick, 200);
 }
 
 function pause() {
     if(!state.running) return;
     state.running = false;
-    clearInterval(intervalId);
+    clearInterval(state.intervalId);
     intervalId = null;
+
+    state.remaining = Math.max(0, Math.ceil((state.targetEpochMs - Date.now()) / 1000));
 }
 
 function stop() {
@@ -75,10 +82,13 @@ function stop() {
 }
 
 function tick() {
-    if (state.remaining > 0) {
-        state.remaining--;
+    const secondsLeft = Math.max(0, Math.ceil((state.targetEpochMs - Date.now()) / 1000));
+    
+    if (secondsLeft !== state.remaining) {
+        state.remaining = secondsLeft;
         renderTime();
-    } else {
+    }
+    if (secondsLeft === 0) {
         pause();
         handleModeEnd(); // change mode
     }
