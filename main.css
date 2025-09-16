@@ -48,9 +48,31 @@ body {
 }
 
 
+/* Buttons */
+#mode-buttons, #play-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+#mode-buttons button, #play-buttons button {
+    background-color: var(--button-background);
+    border: none;
+    color: var(--text-light);
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
 /* Timer States */
+.off-mode {
+    --button-background: var(--dark);
+}
+
 .work-mode {
     background-color: var(--red) !important;
+    --button-background: var(--red2);
 }
 
 .work-mode #time {
@@ -59,6 +81,7 @@ body {
 
 .short-mode {
     background-color: var(--green) !important;
+    --button-background: var(--green2);
 }
 
 .short-mode #time {
@@ -67,6 +90,7 @@ body {
 
 .long-mode {
     background-color: var(--blue) !important;
+    --button-background: var(--blue2);
 }
 
 .long-mode #time {
