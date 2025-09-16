@@ -5,15 +5,20 @@ const timer = document.getElementById('time');
 const startButton = document.getElementById('start');
 const pauseButton = document.getElementById('pause');
 const stopButton = document.getElementById('stop');
+const workButton = document.getElementById('work-btn');
+const shortButton = document.getElementById('short-btn');
+const longButton = document.getElementById('long-btn');
+
+const modeClasses = ['work-mode', 'short-mode', 'long-mode', 'off-mode'];
 
 // Important Variables
-workTime = .1; // minutes
-shortTime = .1; // minutes
-longTime = .1; // minutes
+workTime = 25; // minutes
+shortTime = 5; // minutes
+longTime = 15; // minutes
 
 // Timer State
 const state = {
-    mode: 'long', // cycles between work, short, long
+    mode: 'off', // 'off', 'work', 'short', 'long'
     lengths: { work: workTime*60, short: shortTime*60, long: longTime*60}, // in seconds
     remaining: workTime*60, // in seconds
     running: false,
@@ -21,6 +26,13 @@ const state = {
 }
 
 // Functions
+function setMode(next) {
+    state.mode = next;
+    state.remaining = (next === 'off') ? state.lengths.work : state.lengths[next];
+    timeContainer.classList.remove(...modeClasses);
+    timeContainer.classList.add(`${next}-mode`);
+}
+
 function renderTime() {
     const mins = Math.floor(state.remaining / 60);
     const secs = state.remaining % 60;
@@ -29,12 +41,14 @@ function renderTime() {
 
 let intervalId = null;
 function start() {
+    if (state.mode === 'off') setMode('work');
     if (state.running) return;
     state.running = true;
     intervalId = setInterval(tick, 1000);
 }
 
 function pause() {
+    if(!state.running) return;
     state.running = false;
     clearInterval(intervalId);
     intervalId = null;
@@ -42,9 +56,14 @@ function pause() {
 
 function stop() {
     pause();
-    state.remaining = state.lengths[state.mode];
+    state.completedWorks = 0;
+    if(state.mode === 'off') {
+        state.remaining = state.lengths.work;
+    } else {
+        state.remaining = state.lengths[state.mode]
+    }
     renderTime();
-    timeContainer.classList.remove('work-mode', 'short-mode', 'long-mode', 'off-mode'); // remove previous mode
+    setMode('off');
 }
 
 function tick() {
@@ -60,26 +79,23 @@ function tick() {
 function handleModeEnd() {
     if (state.mode === 'work') {
         state.completedWorks++;
-        if (state.completedWorks % 4 === 0) {
-            state.mode = 'long';
-        } else {
-            state.mode = 'short';
-        }
+        const isLong = state.completedWorks % 4 === 0;
+        setMode(isLong ? 'long' : 'short');
     } else {
-        state.mode = 'work';
+        setMode('work')
     }
-
-    state.remaining = state.lengths[state.mode];
-    timeContainer.classList.remove('work-mode', 'short-mode', 'long-mode', 'off-mode'); // remove previous mode
-    timeContainer.classList.add(`${state.mode}-mode`); // add new mode
-    
     renderTime();
     start();
 }
 
-// Init
-document.getElementById('start').addEventListener('click', start);
-document.getElementById('pause').addEventListener('click', pause);
-document.getElementById('stop').addEventListener('click', stop);
+
+// Buttons
+workButton.addEventListener('click', () => { pause(); setMode('work'); });
+shortButton.addEventListener('click', () => { pause(); setMode('short'); });
+longButton.addEventListener('click',  () => { pause(); setMode('long');  });
+
+startButton.addEventListener('click', start);
+pauseButton.addEventListener('click', pause);
+stopButton.addEventListener('click', stop);
 
 renderTime();
