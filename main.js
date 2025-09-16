@@ -1,20 +1,27 @@
 // DOM Elements
 const appContainer = document.getElementById('app');
+
 const timeContainer = document.getElementById('timer-container');
 const timer = document.getElementById('time');
+
 const startButton = document.getElementById('start');
 const pauseButton = document.getElementById('pause');
 const stopButton = document.getElementById('stop');
+
 const workButton = document.getElementById('work-btn');
 const shortButton = document.getElementById('short-btn');
 const longButton = document.getElementById('long-btn');
 
 const modeClasses = ['work-mode', 'short-mode', 'long-mode', 'off-mode'];
 
+const chime = new Audio('chime.mp3');
+
 // Important Variables
 workTime = 25; // minutes
 shortTime = 5; // minutes
 longTime = 15; // minutes
+
+mute = false; // true or false, might later add a mute button
 
 // Timer State
 const state = {
@@ -77,6 +84,7 @@ function tick() {
 }
 
 function handleModeEnd() {
+    playChime();
     if (state.mode === 'work') {
         state.completedWorks++;
         const isLong = state.completedWorks % 4 === 0;
@@ -88,6 +96,12 @@ function handleModeEnd() {
     start();
 }
 
+function playChime() {
+    if(!mute) {
+        chime.currentTime = 0;
+        chime.play();
+    }
+}
 
 // Buttons
 workButton.addEventListener('click', () => { pause(); setMode('work'); });
