@@ -33,17 +33,18 @@ const state = {
 }
 
 // Functions
+function renderTime() {
+    const mins = Math.floor(state.remaining / 60);
+    const secs = state.remaining % 60;
+    timer.innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
+
 function setMode(next) {
     state.mode = next;
     state.remaining = (next === 'off') ? state.lengths.work : state.lengths[next];
     timeContainer.classList.remove(...modeClasses);
     timeContainer.classList.add(`${next}-mode`);
-}
-
-function renderTime() {
-    const mins = Math.floor(state.remaining / 60);
-    const secs = state.remaining % 60;
-    timer.innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    renderTime()
 }
 
 let intervalId = null;
